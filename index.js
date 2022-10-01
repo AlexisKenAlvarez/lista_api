@@ -340,6 +340,10 @@ app.get("/login", (req, res) => {
     }
 })
 
+app.get("/", (req,res) => {
+    res.send({Message: "Hello"})
+})
+
 
 app.listen(process.env.PORT || 3001, () => {
     console.log("Connected to PORT")
