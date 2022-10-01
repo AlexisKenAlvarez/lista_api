@@ -7,7 +7,7 @@ module.exports = async(email, subject, text) => {
             host: process.env.HOST,
             service: 'Sendinblue',
             post: 587,
-            secure: false,
+            secure: process.env.SECURE,
             auth: {
                 user: process.env.USER,
                 pass: process.env.PASS
