@@ -39,7 +39,7 @@ app.use(session({
 
 }))
 
-mongoose.connect(process.env.DBHOST, 
+mongoose.connect(process.env.MONGODB_URI, 
     {
         useNewUrlParser: true,
     }
