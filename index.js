@@ -24,6 +24,9 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+//-momery unleaked---------
+app.set('trust proxy', 1);
+
 app.use(session({
     key: process.env.KEY,
     secret: process.env.SECRET,
