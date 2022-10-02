@@ -2,7 +2,6 @@ const nodemailer = require("nodemailer")
 require('dotenv').config();
 
 module.exports = async(email, subject, text) => {
-    try {
         const transporter = nodemailer.createTransport({
             host: process.env.HOST,
             service: 'Sendinblue',
@@ -48,11 +47,8 @@ module.exports = async(email, subject, text) => {
                 }
             });
         });
-        
+
         console.log("Email send sucessful")
         res.status(200).json({ status: "OK" });
-    } catch (error) {
-        console.log("Email not sent")
-        console.log(error)
-    }
+    
 }
