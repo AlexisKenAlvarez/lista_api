@@ -9,6 +9,8 @@ const saltRounds = 10;
 const bodyParser = require("body-parser")
 const cookieParser = require("cookie-parser")
 const session = require("express-session")
+const sgMail = require("@sendgrid/mail")
+
 
 const userSchema = require("./modules/userSchema")
 const Token = require("./modules/token")
@@ -102,8 +104,30 @@ app.post("/register", async (req, res) => {
                     </html>
                     `
                     await sendGrid(user.email, "Verify email", message)
+
+                    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+                    try {
+                        const message = {
+                            to: user.email,
+                            from: {
+                                name: 'Lista PH',
+                                email: process.env.USER
+                            },
+                            subject: "Verify Email",
+                            text: "From LISTA",
+                            html: message
+                        }
+
+                        await sgMail.send(message).then((response) => 
+                        console.log("Email sent")).catch((error) => 
+                        console.log(error.message))
+                        
+                    } catch (error) {
+                        console.log(error.message)
+                        console.log(process.env.SENDGRID_API_KEY)
+                    }
     
-                    res.send({token: token.token})
+                    res.send({token: token.token, api: process.env.SENDGRID_API_KEY})
                 })
             })
             
