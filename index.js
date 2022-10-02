@@ -124,7 +124,6 @@ app.post("/register", async (req, res) => {
                         
                     } catch (error) {
                         console.log(error.message)
-                        console.log(process.env.SENDGRID_API_KEY)
                     }
     
                     res.send({token: token.token})
@@ -226,7 +225,6 @@ app.post("/login", async (req, res) => {
                         
                     } catch (error) {
                         console.log(error.message)
-                        console.log(process.env.SENDGRID_API_KEY)
                     }
         res.send({valid: false, message: "We've sent a new verification link to your email. Please check your email inbox."})
 

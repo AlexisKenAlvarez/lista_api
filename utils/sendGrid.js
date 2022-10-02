@@ -21,7 +21,6 @@ module.exports = async (email, subject, text) => {
         
     } catch (error) {
         console.log(error.message)
-        console.log(process.env.SENDGRID_API_KEY)
     }
 
 }
