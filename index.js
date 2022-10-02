@@ -13,6 +13,7 @@ const session = require("express-session")
 const userSchema = require("./modules/userSchema")
 const Token = require("./modules/token")
 const sendEmail = require("./utils/sendEmail")
+const sendGrid = require("./utils/sendGrid")
 const passwordToken = require("./modules/passwordToken")
 
 const crypto = require("crypto")
@@ -100,7 +101,7 @@ app.post("/register", async (req, res) => {
                     </body>
                     </html>
                     `
-                    await sendEmail(user.email, "Verify email", message)
+                    await sendGrid(user.email, "Verify email", message)
     
                     res.send({token: token.token})
                 })
@@ -182,7 +183,7 @@ app.post("/login", async (req, res) => {
         </body>
         </html>
         `
-        await sendEmail(User.email, "Verify email", message)
+        await sendGrid(User.email, "Verify email", message)
         res.send({valid: false, message: "We've sent a new verification link to your email. Please check your email inbox."})
 
     } else {
@@ -246,7 +247,7 @@ app.post("/forgot", async (req, res) => {
                     </body>
                     </html>
                     `
-        await sendEmail(user.email, "Change password", message)
+        await sendGrid(user.email, "Change password", message)
 
         res.send({token: passToken.token})
     }
