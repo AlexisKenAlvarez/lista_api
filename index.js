@@ -103,7 +103,7 @@ app.post("/register", async (req, res) => {
                     </body>
                     </html>
                     `
-                    await sendGrid(user.email, "Verify email", message)
+
 
                     sgMail.setApiKey(process.env.SENDGRID_API_KEY)
                     try {
