@@ -19,6 +19,8 @@ const sendGrid = require("./utils/sendGrid")
 const passwordToken = require("./modules/passwordToken")
 
 const crypto = require("crypto")
+const { isAuth } = require("./utils/isAuth");
+const { updateOne } = require("./modules/token");
 
 require('dotenv').config();
 
@@ -103,7 +105,7 @@ app.post("/register", async (req, res) => {
                     </body>
                     </html>
                     `
-
+                    // await sendGrid(user.email, "Verify email", message)
 
                     sgMail.setApiKey(process.env.SENDGRID_API_KEY)
                     try {
@@ -194,7 +196,7 @@ app.post("/login", async (req, res) => {
             <table width="100%" border="0" cellspacing="0" cellpadding="0" style="height: 60vh; background: #1D1D26; overflow: hidden;">
                 <tr>
                     <td margin: 0 auto; height: 100%; margin-top: 5rem;" align="center">
-                        <img src="https://unix-shop.s3.ap-southeast-1.amazonaws.com/lista/listalogo+2.png" alt="Logo" style="margin: 0 auto; width: 10rem; height: 4rem;"></img>
+                        <img src="https://ik.imagekit.io/efpqj5mis/listalogo_2_YE6STLkFc.png?ik-sdk-version=javascript-1.4.3&updatedAt=1665117620011" alt="Logo" style="margin: 0 auto; width: 10rem; height: 4rem;"></img>
                         <h1 style="font-family:'Courier New'; color: #FFFFFF; text-align: center; margin: 0; margin-top: 2rem;">Account activation: </h1> <br>
 
                         <p style="font-family:'Courier New'; color: #FFFFFF; text-align: center; margin: 0; margin-top: -5rem">Please click the button below to activate your account.</p>
@@ -206,6 +208,9 @@ app.post("/login", async (req, res) => {
         </body>
         </html>
         `
+
+        // await sendGrid(user.email, "Verify email", message)
+
         sgMail.setApiKey(process.env.SENDGRID_API_KEY)
                     try {
                         const message = {
@@ -277,7 +282,7 @@ app.post("/forgot", async (req, res) => {
                         <table width="100%" border="0" cellspacing="0" cellpadding="0" style="height: 60vh; background: #1D1D26; overflow: hidden;">
                             <tr>
                                 <td margin: 0 auto; height: 100%; margin-top: 5rem;" align="center">
-                                    <img src="https://unix-shop.s3.ap-southeast-1.amazonaws.com/lista/listalogo+2.png" alt="Logo" style="margin: 0 auto; width: 10rem; height: 4rem;"></img>
+                                    <img src="https://ik.imagekit.io/efpqj5mis/listalogo_2_YE6STLkFc.png?ik-sdk-version=javascript-1.4.3&updatedAt=1665117620011" alt="Logo" style="margin: 0 auto; width: 10rem; height: 4rem;"></img>
                                     <h1 style="font-family:'Courier New'; color: #FFFFFF; text-align: center; margin: 0; margin-top: 2rem;">Password reset: </h1> <br>
     
                                     <p style="font-family:'Courier New'; color: #FFFFFF; text-align: center; margin: 0; margin-top: -5rem">Please don't forget your password next time.</p>
@@ -388,6 +393,68 @@ app.get("/login", (req, res) => {
 
 app.get("/", (req,res) => {
     res.send({Message: "Hello"})
+})
+
+app.get("/tasks", isAuth, async (req, res) => {
+    const email = req.session.user.email
+
+    const user = await userSchema.findOne({email: email})
+
+    res.send({userData: user})
+})
+
+app.post("/addtask", isAuth, async(req, res) => {
+    const email = req.session.user.email
+
+    const taskName = req.body.taskName
+    const taskSubject = req.body.taskSubject
+    const deadline = req.body.deadline
+
+    userSchema.updateOne({"email": email}, { $push : {"activeTask": [{
+        taskName: taskName,
+        taskSubject: taskSubject,
+        deadline: deadline,
+        status: "Active",
+        dateCreated: new Date()
+        }]
+    } }, (err, result) => {
+        if (err) {
+            res.send({message: err, status: false})
+        } else {
+            res.send({message: "Task successfuly added", status: true})
+        }
+    })
+})
+
+app.post("/remove", isAuth, async(req, res) => {
+    const email = req.session.user.email
+
+    const id = req.body.id
+    const action = req.body.action
+    const from = req.body.from
+
+    if (from === "active") {
+        if (action === "remove") {
+            const task = await userSchema.updateOne({"email" : email}, {$pull: {"activeTask": {"_id": id}}})
+    
+            res.send({Status: task})
+    
+        } else if (action === "finish") {
+            const task = await userSchema.findOne({"email" : email}, {"activeTask": { $elemMatch: {"_id": id}}})
+    
+            const append = await userSchema.updateOne({"email": email}, {$push: {"finishedTask": task.activeTask}})
+    
+            const remove = await userSchema.updateOne({"email" : email}, {$pull: {"activeTask": {"_id": id}}})
+    
+            res.send({Status: "Task Finished"})
+        }
+    } else {
+        const task = await userSchema.updateOne({"email" : email}, {$pull: {"finishedTask": {"_id": id}}})
+    
+        res.send({Status: task})
+    }
+
+
 })
 
 

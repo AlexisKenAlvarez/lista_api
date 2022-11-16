@@ -16,7 +16,26 @@ const userSchema = mongoose.Schema({
     verified: {
         type: Boolean,
         default: false
-    }
+    },
+    level: {
+        type: Number,
+        default: 1
+    },
+    activeTask: [{
+        taskName: String,
+        taskSubject: String,
+        deadline: String,
+        status: String,
+        dateCreated: String
+    
+    }],
+    finishedTask: [{
+        taskName: String,
+        taskSubject: String,
+        deadline: String,
+        status: String,
+        dateCreated: String
+    }]
 })
 
 const users = new mongoose.model("users", userSchema)
