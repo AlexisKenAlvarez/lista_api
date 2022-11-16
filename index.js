@@ -395,7 +395,7 @@ app.get("/", (req,res) => {
     res.send({Message: "Hello"})
 })
 
-app.get("/tasks", async (req, res) => {
+app.get("/tasks", isAuth, async (req, res) => {
     const email = req.session.user.email
 
     const user = await userSchema.findOne({email: email})
