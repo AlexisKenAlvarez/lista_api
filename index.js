@@ -109,7 +109,7 @@ app.post("/register", async (req, res) => {
 
                     sgMail.setApiKey(process.env.SENDGRID_API_KEY)
                     try {
-                        const message = {
+                        const msg = {
                             to: user.email,
                             from: {
                                 name: 'Lista PH',
@@ -120,7 +120,7 @@ app.post("/register", async (req, res) => {
                             html: message
                         }
 
-                        await sgMail.send(message).then((response) => 
+                        await sgMail.send(msg).then((response) => 
                         console.log("Email sent")).catch((error) => 
                         console.log(error.message))
                         
@@ -213,7 +213,7 @@ app.post("/login", async (req, res) => {
 
         sgMail.setApiKey(process.env.SENDGRID_API_KEY)
                     try {
-                        const message = {
+                        const msg= {
                             to: User.email,
                             from: {
                                 name: 'Lista PH',
@@ -224,7 +224,7 @@ app.post("/login", async (req, res) => {
                             html: message
                         }
 
-                        await sgMail.send(message).then((response) => 
+                        await sgMail.send(msg).then((response) => 
                         console.log("Email sent")).catch((error) => 
                         console.log(error.message))
                         
