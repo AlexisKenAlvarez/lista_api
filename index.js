@@ -42,7 +42,7 @@ app.use(session({
     cookie: {
         secure: process.env.SECURE, // required for cookies to work on HTTPS
         httpOnly: false,
-        sameSite: 'none',
+        // sameSite: 'none',
       }
 //
 }))
