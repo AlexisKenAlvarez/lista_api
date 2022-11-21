@@ -396,11 +396,16 @@ app.get("/", (req,res) => {
 })
 
 app.get("/tasks", isAuth, async (req, res) => {
-    const email = req.session.user.email
+    if (req.session.user) {
+        const email = req.session.user.email
 
-    const user = await userSchema.findOne({email: email})
+        const user = await userSchema.findOne({email: email})
+    
+        res.send({userData: user})
+    } else {
+        res.send({loggedIn: false, status: "Failed from /tasks"})
+    }
 
-    res.send({userData: user})
 })
 
 app.post("/addtask", isAuth, async(req, res) => {
