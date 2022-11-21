@@ -3,7 +3,7 @@ const isAuth = (req, res, next) => {
         // IF USER EXISTS
         next()
     } else {
-        res.send({loggedIn: false})
+        res.send({loggedIn: false, isAuth: "False from middleware"})
     }
 }
 
