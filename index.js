@@ -395,7 +395,7 @@ app.get("/", (req,res) => {
     res.send({Message: "Hello"})
 })
 
-app.get("/tasks", isAuth, async (req, res) => {
+app.get("/tasks", async (req, res) => {
     if (req.session.user) {
         const email = req.session.user.email
 
