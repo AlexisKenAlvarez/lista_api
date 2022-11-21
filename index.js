@@ -40,9 +40,9 @@ app.use(session({
     name: 'Lista', // This needs to be unique per-host.
     proxy: true, // Required for Heroku & Digital Ocean (regarding X-Forwarded-For)
     cookie: {
-        secure: process.env.SECURE, // required for cookies to work on HTTPS
+        // secure: process.env.SECURE, // required for cookies to work on HTTPS
         httpOnly: false,
-        // sameSite: 'none',
+        // sameSite: 'lax',
       }
 //
 }))
