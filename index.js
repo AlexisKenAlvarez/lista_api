@@ -43,7 +43,6 @@ app.use(session({
         secure: process.env.SECURE, // required for cookies to work on HTTPS
         httpOnly: false,
         sameSite: 'none',
-        path: '/'
       }
 //
 }))
