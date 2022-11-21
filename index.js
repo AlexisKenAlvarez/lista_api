@@ -209,7 +209,7 @@ app.post("/login", async (req, res) => {
         </html>
         `
 
-        // await sendGrid(user.email, "Verify email", message)
+        // await sendGrid(User.email, "Verify email", message)
 
         sgMail.setApiKey(process.env.SENDGRID_API_KEY)
                     try {
@@ -391,19 +391,23 @@ app.get("/login", (req, res) => {
     }
 })
 
-app.get("/", (req,res) => {
+app.get("/", (req ,res) => {
     res.send({Message: "Hello"})
 })
 
-app.get("/tasks", isAuth, async (req, res) => {
+app.get("/tasks", async (req, res) => {
     const email = req.session.user.email
 
     const user = await userSchema.findOne({email: email})
 
-    res.send({userData: user})
+    if (req.session.user) {
+        res.send({userData: user})
+    } else {
+        res.send({userData: "Not logged in"})
+    }
 })
 
-app.post("/addtask", isAuth, async(req, res) => {
+app.post("/addtask", async(req, res) => {
     const email = req.session.user.email
 
     const taskName = req.body.taskName
@@ -426,7 +430,7 @@ app.post("/addtask", isAuth, async(req, res) => {
     })
 })
 
-app.post("/remove", isAuth, async(req, res) => {
+app.post("/remove", async(req, res) => {
     const email = req.session.user.email
 
     const id = req.body.id
