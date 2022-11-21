@@ -396,15 +396,17 @@ app.get("/", (req ,res) => {
 })
 
 app.get("/tasks", async (req, res) => {
+    
+    if (!req.session.user) {
+        res.send({userData: "Not logged in"})
+    }
+
     const email = req.session.user.email
 
     const user = await userSchema.findOne({email: email})
 
-    if (req.session.user) {
-        res.send({userData: user})
-    } else {
-        res.send({userData: "Not logged in"})
-    }
+    res.send({userData: user})
+
 })
 
 app.post("/addtask", async(req, res) => {
